@@ -1,18 +1,33 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { MongooseModule } from '@nestjs/mongoose';
+import * as dotenv from 'dotenv';
 import { AuthModule } from './auth/auth.module';
-import { CategoryModule } from './category/category.module';
-import { ProductModule } from './product/product.module';
-import { BrandModule } from './brand/brand.module';
-import { WishlistModule } from './wishlist/wishlist.module';
-import { OrderModule } from './order/order.module';
-import { SearchModule } from './search/search.module';
-import { FileUploadModule } from './file_upload/file_upload.module';
+import { ProductsModule } from './products/products.module';
+import { UsersModule } from './users/users.module';
+import { CartModule } from './cart/cart.module';
+import { OrdersModule } from './orders/orders.module';
+import { BrandsModule } from './brands/brands.module';
+import { CategoriesModule } from './categories/categories.module';
+import { UploadModule } from './upload/upload.module';
 
+dotenv.config();
+
+const mongoUri = process.env.MONGO_URI;
+
+if (!mongoUri) {
+  throw new Error('MONGO_URI environment variable is not set');
+}
 @Module({
-  imports: [AuthModule, CategoryModule, ProductModule, BrandModule, WishlistModule, OrderModule, SearchModule, FileUploadModule],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [
+    MongooseModule.forRoot(mongoUri),
+    AuthModule,
+    UsersModule,
+    ProductsModule,
+    CartModule,
+    OrdersModule,
+    BrandsModule,
+    CategoriesModule,
+    UploadModule,
+  ],
 })
-export class AppModule {}
+export class AppModule { }
